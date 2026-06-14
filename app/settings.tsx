@@ -1,16 +1,16 @@
 'use client'
 import { useState } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  Switch,
   Linking,
   Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 
 export default function SettingsScreen() {
@@ -58,14 +58,14 @@ export default function SettingsScreen() {
 
           <TouchableOpacity
             style={styles.row}
-            onPress={() => Linking.openURL('https://autosaathijsr.vercel.app')}
+            onPress={() => Linking.openURL('https://harihanshansdah.online')}
           >
             <View style={[styles.rowIcon, { backgroundColor: '#e8f0fd' }]}>
               <Text style={styles.rowEmoji}>🌐</Text>
             </View>
             <View style={styles.rowContent}>
               <Text style={styles.rowTitle}>Visit Website</Text>
-              <Text style={styles.rowSub}>autosaathijsr.vercel.app</Text>
+              <Text style={styles.rowSub}>harihanshansdah.online</Text>
             </View>
             <Text style={styles.rowArrow}>›</Text>
           </TouchableOpacity>
@@ -192,9 +192,9 @@ export default function SettingsScreen() {
             {[
               { label: 'Developer',  value: 'Hari'              },
               { label: 'City',       value: 'Jamshedpur, Jharkhand' },
-              { label: 'Routes',     value: '36+ routes covered' },
+              { label: 'Routes',     value: '10+ routes covered' },
               { label: 'Min Fare',   value: '₹10'               },
-              { label: 'Built with', value: 'React Native + Expo'},
+              { label: 'Max Fare',   value: '₹60'              },
             ].map((item) => (
               <View key={item.label} style={modal.infoRow}>
                 <Text style={modal.infoLabel}>{item.label}</Text>

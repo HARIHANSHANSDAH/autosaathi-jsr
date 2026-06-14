@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import {
-  View,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  View
 } from 'react-native'
 import { STOPS, getFare } from '../data/routes'
 
@@ -71,8 +70,8 @@ export default function HomeScreen() {
   }
 
   const popularRoutes = [
-    { from: 'New Baridih', to: 'Sakchi',      fare: 15 },
-    { from: 'Sakchi',     to: 'New Baridih',      fare: 15 },
+    { from: 'New Baridih', to: 'Sakchi',      fare: 20 },
+    { from: 'Sakchi',     to: 'New Baridih',      fare: 20 },
   ]
 
   return (
