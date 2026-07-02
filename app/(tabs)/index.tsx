@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 
 import { HelloWave } from '@/components/hello-wave';
@@ -6,6 +7,10 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import { IndirectRoute } from '../../data/routes';
+
+
+const [indirectRoutes, setIndirectRoutes] = useState<IndirectRoute[]>([])
 
 export default function HomeScreen() {
   return (
@@ -95,4 +100,52 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+
+  indirectContainer:  { marginTop: 12, gap: 10 },
+indirectHeader:     { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 4 },
+indirectIcon:       { fontSize: 22 },
+indirectTitle:      { fontSize: 14, fontWeight: '700', color: '#1a1a1a' },
+indirectSub:        { fontSize: 11, color: '#888', marginTop: 1 },
+indirectCard: {
+  backgroundColor: '#fff',
+  borderRadius: 12,
+  borderWidth: 0.5,
+  borderColor: '#e8e8e8',
+  padding: 12,
+  flexDirection: 'row',
+  gap: 10,
+  elevation: 2,
+},
+indirectNum: {
+  width: 24,
+  height: 24,
+  borderRadius: 12,
+  backgroundColor: '#1B8C5E',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+},
+indirectNumText:  { color: '#fff', fontSize: 11, fontWeight: '700' },
+indirectBody:     { flex: 1, gap: 6 },
+legRow:           { flexDirection: 'row', alignItems: 'center', gap: 8 },
+legDot:           { width: 10, height: 10, borderRadius: 5, backgroundColor: '#1B8C5E', flexShrink: 0 },
+legInfo:          { flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+legRoute:         { fontSize: 12, fontWeight: '500', color: '#1a1a1a', flex: 1 },
+legFare:          { fontSize: 12, fontWeight: '700', color: '#1B8C5E' },
+changeRow:        { flexDirection: 'row', alignItems: 'center', gap: 6, marginVertical: 2 },
+changeLine:       { flex: 1, height: 0.5, backgroundColor: '#e0e0e0' },
+changeBadge:      { backgroundColor: '#FEF3C7', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 },
+changeText:       { fontSize: 10, color: '#B45309', fontWeight: '600' },
+totalRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  backgroundColor: '#E1F5EE',
+  borderRadius: 8,
+  paddingHorizontal: 10,
+  paddingVertical: 6,
+  marginTop: 4,
+},
+totalLabel:  { fontSize: 12, color: '#085041', fontWeight: '500' },
+totalFare:   { fontSize: 16, fontWeight: '700', color: '#1B8C5E' },
 });

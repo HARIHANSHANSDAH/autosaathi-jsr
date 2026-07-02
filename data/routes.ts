@@ -4,6 +4,37 @@ export type Route = {
   fare: number
 }
 
+// ── FIND INDIRECT ROUTE ──
+export function findIndirectRoute(
+  from: string,
+  to: string
+): IndirectRoute[] {
+  const n = (s: string) => s.trim().toLowerCase()
+  const results: IndirectRoute[] = []
+
+  const fromRoutes = getRoutesFrom(from)
+
+  fromRoutes.forEach((leg1) => {
+    const via = n(leg1.from) === n(from) ? leg1.to : leg1.from
+    const leg2Fare = getFare(via, to)
+
+    if (
+      leg2Fare !== null &&
+      n(via) !== n(from) &&
+      n(via) !== n(to)
+    ) {
+      results.push({
+        via,
+        leg1: { from, to: via, fare: leg1.fare },
+        leg2: { from: via, to, fare: leg2Fare },
+        totalFare: leg1.fare + leg2Fare,
+      })
+    }
+  })
+
+  return results.sort((a, b) => a.totalFare - b.totalFare)
+
+}
 
 export const STOPS: string[] = [
 
@@ -426,3 +457,14 @@ export function getRouteName(stop: string): string {
   if (shared.includes(stop)) return 'Multiple Routes'
   return ''
 }
+
+
+
+// ── INDIRECT ROUTE TYPE ──
+export type IndirectRoute = {
+  via: string
+  leg1: { from: string; to: string; fare: number }
+  leg2: { from: string; to: string; fare: number }
+  totalFare: number
+}
+

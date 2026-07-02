@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { STOPS, getFare } from '../data/routes'
+import { findIndirectRoute, getFare, IndirectRoute, STOPS } from '../data/routes'
 
 export default function HomeScreen() {
   const [from, setFrom] = useState('')
@@ -18,6 +18,8 @@ export default function HomeScreen() {
   const [toSuggestions, setToSuggestions] = useState<string[]>([])
   const [fareResult, setFareResult] = useState<number | null>(null)
   const [notFound, setNotFound] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [indirectRoutes, setIndirectRoutes] = useState<IndirectRoute[]>([])
 
   const getSuggestions = (input: string): string[] => {
     if (!input.trim()) return []
@@ -57,21 +59,62 @@ export default function HomeScreen() {
     setNotFound(false)
   }
 
+  // const handleSearch = () => {
+  //   if (!from.trim() || !to.trim()) return
+  //   const fare = getFare(from, to)
+  //   if (fare !== null) {
+  //     setFareResult(fare)
+  //     setNotFound(false)
+  //   } else {
+  //     setFareResult(null)
+  //     setNotFound(true)
+  //   }
+  // }
+
   const handleSearch = () => {
-    if (!from.trim() || !to.trim()) return
-    const fare = getFare(from, to)
-    if (fare !== null) {
-      setFareResult(fare)
-      setNotFound(false)
-    } else {
-      setFareResult(null)
-      setNotFound(true)
-    }
+  // ── Reset all states ──
+  setFareResult(null)
+  setNotFound(false)
+  setErrorMsg(null)
+  setIndirectRoutes([])
+
+  // ── Empty check ──
+  if (!from.trim() || !to.trim()) {
+    setErrorMsg('Please enter both From and To locations.')
+    return
   }
+
+  // ── Same stop check ──
+  if (from.trim().toLowerCase() === to.trim().toLowerCase()) {
+    setErrorMsg('From and To cannot be the same stop!')
+    return
+  }
+
+  // ── Try direct route first ──
+  const fare = getFare(from.trim(), to.trim())
+  if (fare !== null) {
+    setFareResult(fare)
+    setNotFound(false)
+    setIndirectRoutes([])
+    return
+  }
+
+  // ── No direct route — find indirect ──
+  const indirect = findIndirectRoute(from.trim(), to.trim())
+  console.log('indirect routes found:', indirect.length, indirect)
+
+  if (indirect.length > 0) {
+    setIndirectRoutes(indirect)
+    setNotFound(false)
+  } else {
+    setNotFound(true)
+    setIndirectRoutes([])
+  }
+}
 
   const popularRoutes = [
     { from: 'New Baridih', to: 'Sakchi',      fare: 20 },
-    { from: 'Sakchi',     to: 'New Baridih',      fare: 20 },
+    { from: 'Sakchi',     to: 'New Baridih',      fare: 20   },
   ]
 
   return (
@@ -188,44 +231,81 @@ export default function HomeScreen() {
             </View>
           )}
 
+          {/* ── INDIRECT ROUTES ── */}
+{indirectRoutes.length > 0 && (
+  <View style={styles.indirectContainer}>
+
+    <View style={styles.indirectHeader}>
+      <Text style={styles.indirectIcon}>🔄</Text>
+      <View>
+        <Text style={styles.indirectTitle}>No Direct Route</Text>
+        <Text style={styles.indirectSub}>
+          Try these routes with 1 change
+        </Text>
+      </View>
+    </View>
+
+    {indirectRoutes.slice(0, 3).map((route, index) => (
+      <View key={index} style={styles.indirectCard}>
+
+        <View style={styles.indirectNum}>
+          <Text style={styles.indirectNumText}>{index + 1}</Text>
+        </View>
+
+        <View style={styles.indirectBody}>
+
+          {/* Leg 1 */}
+          <View style={styles.legRow}>
+            <View style={styles.legDot} />
+            <View style={styles.legInfo}>
+              <Text style={styles.legRoute}>
+                {route.leg1.from} → {route.leg1.to}
+              </Text>
+              <Text style={styles.legFare}>₹ {route.leg1.fare}</Text>
+            </View>
+          </View>
+
+          {/* Change at */}
+          <View style={styles.changeRow}>
+            <View style={styles.changeLine} />
+            <View style={styles.changeBadge}>
+              <Text style={styles.changeText}>
+                🔄 Change at {route.via}
+              </Text>
+            </View>
+            <View style={styles.changeLine} />
+          </View>
+
+          {/* Leg 2 */}
+          <View style={styles.legRow}>
+            <View style={[styles.legDot, { backgroundColor: '#6B21A8' }]} />
+            <View style={styles.legInfo}>
+              <Text style={styles.legRoute}>
+                {route.leg2.from} → {route.leg2.to}
+              </Text>
+              <Text style={styles.legFare}>₹ {route.leg2.fare}</Text>
+            </View>
+          </View>
+
+          {/* Total */}
+          <View style={styles.totalRow}>
+            <Text style={styles.totalLabel}>Total fare</Text>
+            <Text style={styles.totalFare}>₹ {route.totalFare}</Text>
+          </View>
+
+        </View>
+      </View>
+    ))}
+
+  </View>
+)}
+
           {/* Not found */}
           {notFound && (
             <View style={styles.fareNotFound}>
-              <Text style={styles.fareNotFoundText}>
-                Route not found. Try different stops.
-              </Text>
+              <Text style={styles.fareNotFoundText}>>Sorry, no direct or indirect route found for this pair.</Text>
             </View>
-          )}
-
-        </View>
-
-
-        {/* ── POPULAR ROUTES ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Popular Routes</Text>
-          {popularRoutes.map((route, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.routeCard}
-              onPress={() => {
-                setFrom(route.from)
-                setTo(route.to)
-                setFareResult(route.fare)
-                setNotFound(false)
-              }}
-            >
-              <View style={styles.routeCardLeft}>
-                <Text style={styles.routePath}>
-                  {route.from}
-                  <Text style={styles.routeArrow}> → </Text>
-                  {route.to}
-                </Text>
-              </View>
-              <View style={styles.farePill}>
-                <Text style={styles.farePillText}>₹ {route.fare}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+          )}    
         </View>
 
         {/* ── FOOTER ── */}
@@ -496,6 +576,54 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8e8e8',
   },
 
+
+  indirectContainer:  { marginTop: 12, gap: 10 },
+indirectHeader:     { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 4 },
+indirectIcon:       { fontSize: 22 },
+indirectTitle:      { fontSize: 14, fontWeight: '700', color: '#1a1a1a' },
+indirectSub:        { fontSize: 11, color: '#888', marginTop: 1 },
+indirectCard: {
+  backgroundColor: '#fff',
+  borderRadius: 12,
+  borderWidth: 0.5,
+  borderColor: '#e8e8e8',
+  padding: 12,
+  flexDirection: 'row',
+  gap: 10,
+  elevation: 2,
+},
+indirectNum: {
+  width: 24,
+  height: 24,
+  borderRadius: 12,
+  backgroundColor: '#1B8C5E',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+},
+indirectNumText:  { color: '#fff', fontSize: 11, fontWeight: '700' },
+indirectBody:     { flex: 1, gap: 6 },
+legRow:           { flexDirection: 'row', alignItems: 'center', gap: 8 },
+legDot:           { width: 10, height: 10, borderRadius: 5, backgroundColor: '#1B8C5E', flexShrink: 0 },
+legInfo:          { flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+legRoute:         { fontSize: 12, fontWeight: '500', color: '#1a1a1a', flex: 1 },
+legFare:          { fontSize: 12, fontWeight: '700', color: '#1B8C5E' },
+changeRow:        { flexDirection: 'row', alignItems: 'center', gap: 6, marginVertical: 2 },
+changeLine:       { flex: 1, height: 0.5, backgroundColor: '#e0e0e0' },
+changeBadge:      { backgroundColor: '#FEF3C7', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 },
+changeText:       { fontSize: 10, color: '#B45309', fontWeight: '600' },
+totalRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  backgroundColor: '#E1F5EE',
+  borderRadius: 8,
+  paddingHorizontal: 10,
+  paddingVertical: 6,
+  marginTop: 4,
+},
+totalLabel:  { fontSize: 12, color: '#085041', fontWeight: '500' },
+totalFare:   { fontSize: 16, fontWeight: '700', color: '#1B8C5E' },
   // ── POPULAR ROUTES ──
   section: {
     marginHorizontal: 16,
