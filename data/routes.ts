@@ -1,117 +1,32 @@
-export type Route = {
-  from: string
-  to: string
-  fare: number
-  km: number
-}
-
-
-export type IndirectRoute = {
-  via: string
-  via2?: string  // ← second change point (optional)
-  leg1: { from: string; to: string; fare: number }
-  leg2: { from: string; to: string; fare: number }
-  leg3?: { from: string; to: string; fare: number }  // ← third leg (optional)
-  totalFare: number
-  changes: number  // ← how many changes
-}
-
-// export function findIndirectRoute(
-//   from: string,
-//   to: string
-// ): IndirectRoute[] {
-//   const n = (s: string) => s.trim().toLowerCase()
-//   const results: IndirectRoute[] = []
-//   const seen = new Set<string>()
-
-//   const fromRoutes = getRoutesFrom(from)
-
-//   // ── 1 CHANGE (2 legs) ──
-//   fromRoutes.forEach((leg1) => {
-//     const via = n(leg1.from) === n(from) ? leg1.to : leg1.from
-//     if (n(via) === n(from) || n(via) === n(to)) return
-
-//     const leg2Fare = getFare(via, to)
-
-//     if (leg2Fare !== null) {
-//       const key = `${n(via)}`
-//       if (!seen.has(key)) {
-//         seen.add(key)
-//         results.push({
-//           via,
-//           leg1: { from, to: via, fare: leg1.fare },
-//           leg2: { from: via, to, fare: leg2Fare },
-//           totalFare: leg1.fare + leg2Fare,
-//           changes: 1,
-//         })
-//       }
-//     }
-
-//     // ── 2 CHANGES (3 legs) ──
-//     const viaRoutes = getRoutesFrom(via)
-//     viaRoutes.forEach((leg2) => {
-//       const via2 = n(leg2.from) === n(via) ? leg2.to : leg2.from
-
-//       if (
-//         n(via2) === n(from) ||
-//         n(via2) === n(to)   ||
-//         n(via2) === n(via)
-//       ) return
-
-//       const leg3Fare = getFare(via2, to)
-
-//       if (leg3Fare !== null) {
-//         const key = `${n(via)}-${n(via2)}`
-//         if (!seen.has(key)) {
-//           seen.add(key)
-//           results.push({
-//             via,
-//             via2,
-//             leg1: { from,  to: via,  fare: leg1.fare  },
-//             leg2: { from: via,  to: via2, fare: leg2.fare  },
-//             leg3: { from: via2, to,    fare: leg3Fare  },
-//             totalFare: leg1.fare + leg2.fare + leg3Fare,
-//             changes: 2,
-//           })
-//         }
-//       }
-//     })
-//   })
-
-//   // Sort by total fare, then by number of changes
-//   return results.sort((a, b) => {
-//     if (a.totalFare !== b.totalFare) return a.totalFare - b.totalFare
-//     return a.changes - b.changes
-//   })
-// }
-
 export function findIndirectRoute(
   from: string,
   to: string
 ): IndirectRoute[] {
   const n = (s: string) => s.trim().toLowerCase()
+  const startNode = n(from)
+  const endNode = n(to)
+  
   const results: IndirectRoute[] = []
   const seen = new Set<string>()
 
-  // ── KEY FIX: if direct route exists, return empty ──
+  // ── 1. If direct route exists, return empty ──
   const directFare = getFare(from, to)
   if (directFare !== null) return []
 
   const fromRoutes = getRoutesFrom(from)
 
-  // ── 1 CHANGE ──
+  // ── 2. FIND ALL 1-CHANGE ROUTES ──
   fromRoutes.forEach((leg1) => {
-    const via = n(leg1.from) === n(from) ? leg1.to : leg1.from
-    if (n(via) === n(from) || n(via) === n(to)) return
+    const via = n(leg1.from) === startNode ? leg1.to : leg1.from
+    const viaNode = n(via)
+
+    // Skip if it loops back to start or destination
+    if (viaNode === startNode || viaNode === endNode) return
 
     const leg2Fare = getFare(via, to)
     if (leg2Fare === null) return
 
-    // ── FIX: skip if via is further away than destination ──
-    // Skip if total fare is more than 3x the direct fare would be
-    if (leg1.fare > leg2Fare * 2) return
-
-    const key = n(via)
+    const key = `1-change-${viaNode}`
     if (seen.has(key)) return
     seen.add(key)
 
@@ -124,59 +39,68 @@ export function findIndirectRoute(
     })
   })
 
-  // ── 2 CHANGES (only if no 1-change found) ──
-  if (results.length === 0) {
-    fromRoutes.forEach((leg1) => {
-      const via = n(leg1.from) === n(from) ? leg1.to : leg1.from
-      if (n(via) === n(from) || n(via) === n(to)) return
+  // ── 3. FIND ALL 2-CHANGE ROUTES ──
+  // We calculate these even if 1-change routes exist, 
+  // because a 2-change route might actually be significantly cheaper!
+  fromRoutes.forEach((leg1) => {
+    const via = n(leg1.from) === startNode ? leg1.to : leg1.from
+    const viaNode = n(via)
 
-      const viaRoutes = getRoutesFrom(via)
-      viaRoutes.forEach((leg2) => {
-        const via2 = n(leg2.from) === n(via) ? leg2.to : leg2.from
+    if (viaNode === startNode || viaNode === endNode) return
 
-        if (
-          n(via2) === n(from) ||
-          n(via2) === n(to)   ||
-          n(via2) === n(via)
-        ) return
+    const viaRoutes = getRoutesFrom(via)
+    
+    viaRoutes.forEach((leg2) => {
+      const via2 = n(leg2.from) === viaNode ? leg2.to : leg2.from
+      const via2Node = n(via2)
 
-        // ── FIX: skip backwards routes ──
-        const backtrack = getFare(via2, from)
-        if (backtrack !== null && backtrack < leg1.fare) return
+      // Skip invalid loops
+      if (via2Node === startNode || via2Node === endNode || via2Node === viaNode) return
 
-        // ── FIX: skip if via2 has direct route to from ──
-        const directVia2ToFrom = getFare(from, via2)
-        if (directVia2ToFrom !== null && directVia2ToFrom < leg1.fare + leg2.fare) return
+      // Prevent silly backtracking (e.g., going backwards to go forwards)
+      const backtrackFare = getFare(via2, from)
+      if (backtrackFare !== null && backtrackFare < leg1.fare) return
 
-        const leg3Fare = getFare(via2, to)
-        if (leg3Fare === null) return
+      const leg3Fare = getFare(via2, to)
+      if (leg3Fare === null) return
 
-        const key = `${n(via)}-${n(via2)}`
-        if (seen.has(key)) return
-        seen.add(key)
+      const key = `2-change-${viaNode}-${via2Node}`
+      if (seen.has(key)) return
+      seen.add(key)
 
-        results.push({
-          via,
-          via2,
-          leg1: { from,  to: via,  fare: leg1.fare  },
-          leg2: { from: via,  to: via2, fare: leg2.fare },
-          leg3: { from: via2, to,       fare: leg3Fare  },
-          totalFare: leg1.fare + leg2.fare + leg3Fare,
-          changes: 2,
-        })
+      results.push({
+        via,
+        via2,
+        leg1: { from, to: via, fare: leg1.fare },
+        leg2: { from: via, to: via2, fare: leg2.fare },
+        leg3: { from: via2, to, fare: leg3Fare },
+        totalFare: leg1.fare + leg2.fare + leg3Fare,
+        changes: 2,
       })
     })
-  }
+  })
 
+  // ── 4. SMART SORTING (The Magic) ──
   return results
     .sort((a, b) => {
-      if (a.changes !== b.changes) return a.changes - b.changes
-      if (a.totalFare !== b.totalFare) return a.totalFare - b.totalFare
-      return a.leg1.fare - b.leg1.fare
+      // Priority 1: Cheapest Total Fare always wins
+      if (a.totalFare !== b.totalFare) {
+        return a.totalFare - b.totalFare
+      }
+      
+      // Priority 2: If fares are identical, favor the route with fewer changes
+      if (a.changes !== b.changes) {
+        return a.changes - b.changes
+      }
+      
+      // Priority 3: If fare and changes are equal, favor the most balanced route geographically.
+      // E.g., A route split ₹20 + ₹20 is generally a better central hub than ₹10 + ₹30.
+      const aDiff = Math.abs(a.leg1.fare - a.leg2.fare)
+      const bDiff = Math.abs(b.leg1.fare - b.leg2.fare)
+      return aDiff - bDiff
     })
-    .slice(0, 3)
+    .slice(0, 3) // Return top 3 best optimized routes
 }
-
 
 export const STOPS: string[] = [
 
@@ -820,6 +744,12 @@ export const ROUTES: Route[] = [
 
   { from: 'Sakchi', to: 'P&M Mall',   fare: 25, km: 6.5 },
   { from: 'Bistupur', to: 'P&M Mall', fare: 20, km: 4.8 },
+
+
+  //- For Some resion
+  // Check if both of these exist in your data array:
+{ from: 'Tatanagar Station', to: 'Bistupur', fare: 20 },
+{ from: 'Bistupur', to: 'Kandra', fare: 30 }
 ];
 
 // ── GET FARE (bidirectional) ──
