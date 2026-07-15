@@ -142,8 +142,8 @@ export default function HomeScreen() {
               <Text style={styles.searchLabel}>FROM</Text>
               <TextInput
                 style={[styles.searchInput, { backgroundColor: theme.inputBg, color: theme.inputColor }]}
-                placeholder="e.g. Baridih"
-                placeholderTextColor={theme.inputPlaceholder}
+                placeholder="e.g. Tatanagar Station"
+                placeholderTextColor={theme.subText}
                 value={from}
                 onChangeText={handleFromChange}
               />
@@ -174,7 +174,7 @@ export default function HomeScreen() {
               <TextInput
                 style={[styles.searchInput, { backgroundColor: theme.inputBg, color: theme.inputColor }]}
                 placeholder="e.g. Sakchi"
-                placeholderTextColor={theme.inputPlaceholder}
+                placeholderTextColor={theme.subText}
                 value={to}
                 onChangeText={handleToChange}
               />

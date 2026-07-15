@@ -1,3 +1,20 @@
+export interface IndirectRoute {
+  via: string
+  via2?: string
+  leg1: { from: string; to: string; fare: number }
+  leg2: { from: string; to: string; fare: number }
+  leg3?: { from: string; to: string; fare: number }
+  totalFare: number
+  changes: number
+}
+
+export interface Route {
+  from: string
+  to: string
+  fare: number
+  km?: number
+}
+
 export function findIndirectRoute(
   from: string,
   to: string
@@ -570,7 +587,7 @@ export const ROUTES: Route[] = [
   { from: 'Tatanagar Station', to: 'Golmuri Circle',   fare: 15, km: 5.5 },
   { from: 'Tatanagar Station', to: 'Howrah Bridge',    fare: 15, km: 6.8 },
   { from: 'Tatanagar Station', to: 'Kashidih Circle',  fare: 20, km: 7.5 },
-  { from: 'Tatanagar Station', to: 'Sakchi',           fare: 20, km: 8.5 },
+  { from: 'Tatanagar Station', to: 'Sakchi',           fare: 25, km: 8.5 },
 
   // From Burma Mines
   { from: 'Burma Mines', to: 'Golmuri Circle',   fare: 10, km: 2.5 },
