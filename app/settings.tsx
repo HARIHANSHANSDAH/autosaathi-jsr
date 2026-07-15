@@ -36,7 +36,7 @@ export default function SettingsScreen() {
       {/* ── HEADER ── */}
       <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
         <Text style={styles.headerTitle}>⚙️ Settings</Text>
-        <Text style={styles.headerSub}>AutoSaathi JSR v1.0.0</Text>
+        <Text style={styles.headerSub}>AutoSaathi JSR v1.2.0</Text>
       </View>
 
       <ScrollView style={[styles.scroll, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
@@ -168,7 +168,7 @@ export default function SettingsScreen() {
         {/* ── MADE BY ── */}
         <View style={styles.madeBy}>
           <Text style={[styles.madeByText, { color: theme.subText }]}>Made with ❤️ by Hari</Text>
-          <Text style={styles.madeByVersion}>AutoSaathi JSR v1.0.0 • Jamshedpur</Text>
+          <Text style={styles.madeByVersion}>AutoSaathi JSR v1.2.0 • Jamshedpur</Text>
         </View>
 
       </ScrollView>
@@ -187,7 +187,7 @@ export default function SettingsScreen() {
             <View style={modal.logoBox}>
               <Text style={{ fontSize: 48 }}>🛺</Text>
               <Text style={[modal.appName, { color: theme.text }]}>AutoSaathi JSR</Text>
-              <Text style={[modal.version, { color: theme.subText }]}>Version 1.0.0</Text>
+              <Text style={[modal.version, { color: theme.subText }]}>Version 1.2.0</Text>
             </View>
 
             {[
