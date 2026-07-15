@@ -1,93 +1,108 @@
-import { Tabs } from 'expo-router'
-import { View, Text, TouchableOpacity, StyleSheet, Vibration, Modal, Linking } from 'react-native'
-import { useState } from 'react'
+import { Tabs } from 'expo-router';
+import { useState } from 'react';
+import { Linking, Modal, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
+// 1. Import the global theme hook and provider
+import { ThemeProvider, useTheme } from '../components/ThemeContext';
 
 // ── SOS MODAL COMPONENT ──
 function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  // 2. Consume the current theme styles inside the modal
+  const { theme, darkMode } = useTheme();
+
   const contacts = [
-    { name: 'Police',        number: '100',  emoji: '👮', color: '#1a4fa0', bg: '#e8f0fd', desc: 'Jamshedpur Police'   },
-    { name: 'Ambulance',     number: '108',  emoji: '🚑', color: '#c0392b', bg: '#fdecea', desc: 'Emergency Ambulance' },
-    { name: 'Fire Brigade',  number: '101',  emoji: '🚒', color: '#e67e22', bg: '#fef3e2', desc: 'Fire & Rescue'       },
-    { name: 'Women Helpline',number: '1091', emoji: '👩', color: '#8e44ad', bg: '#f5eef8', desc: 'Women Safety'        },
-    { name: 'Child Helpline',number: '1098', emoji: '🧒', color: '#16a085', bg: '#e8f8f5', desc: 'Child in Danger'     },
-    { name: 'Disaster',      number: '1070', emoji: '🆘', color: '#c0392b', bg: '#fdecea', desc: 'National Disaster'   },
-  ]
+    { name: 'Police',         number: '100',  emoji: '👮', color: '#1a4fa0', bg: '#e8f0fd', desc: 'Jamshedpur Police'   },
+    { name: 'Ambulance',      number: '108',  emoji: '🚑', color: '#c0392b', bg: '#fdecea', desc: 'Emergency Ambulance' },
+    { name: 'Fire Brigade',   number: '101',  emoji: '🚒', color: '#e67e22', bg: '#fef3e2', desc: 'Fire & Rescue'       },
+    { name: 'Women Helpline', number: '1091', emoji: '👩', color: '#8e44ad', bg: '#f5eef8', desc: 'Women Safety'        },
+    { name: 'Child Helpline', number: '1098', emoji: '🧒', color: '#16a085', bg: '#e8f8f5', desc: 'Child in Danger'     },
+    { name: 'Disaster',       number: '1070', emoji: '🆘', color: '#c0392b', bg: '#fdecea', desc: 'National Disaster'   },
+  ];
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={sos.overlay}>
-        <View style={sos.box}>
+        {/* Dynamic modal container background color */}
+        <View style={[sos.box, { backgroundColor: theme.modalBox }]}>
 
           <View style={sos.header}>
             <View>
-              <Text style={sos.title}>🆘 Emergency Help</Text>
-              <Text style={sos.sub}>Tap any number to call instantly</Text>
+              <Text style={[sos.title, { color: theme.text }]}>🆘 Emergency Help</Text>
+              <Text style={[sos.sub, { color: theme.subText }]}>Tap any number to call instantly</Text>
             </View>
-            <TouchableOpacity style={sos.closeBtn} onPress={onClose}>
-              <Text style={sos.closeBtnText}>✕</Text>
+            <TouchableOpacity 
+              style={[sos.closeBtn, { backgroundColor: theme.closeBtn }]} 
+              onPress={onClose}
+            >
+              <Text style={[sos.closeBtnText, { color: theme.closeText }]}>✕</Text>
             </TouchableOpacity>
           </View>
 
           {contacts.map((c) => (
             <TouchableOpacity
               key={c.number}
-              style={sos.row}
+              style={[sos.row, { borderBottomColor: theme.divider }]}
               onPress={() => Linking.openURL(`tel:${c.number}`)}
             >
-              <View style={[sos.icon, { backgroundColor: c.bg }]}>
+              {/* If dark mode is on, we give the contact row icons a neutral background */}
+              <View style={[sos.icon, { backgroundColor: darkMode ? '#2c2c2c' : c.bg }]}>
                 <Text style={{ fontSize: 20 }}>{c.emoji}</Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={sos.name}>{c.name}</Text>
-                <Text style={sos.desc}>{c.desc}</Text>
+                <Text style={[sos.name, { color: theme.text }]}>{c.name}</Text>
+                <Text style={[sos.desc, { color: theme.subText }]}>{c.desc}</Text>
               </View>
-              <View style={[sos.callBtn, { backgroundColor: c.bg }]}>
-                <Text style={[sos.callNum, { color: c.color }]}>{c.number}</Text>
-                <Text style={[sos.callLabel, { color: c.color }]}>📞 Call</Text>
+              <View style={[sos.callBtn, { backgroundColor: darkMode ? '#2c2c2c' : c.bg }]}>
+                <Text style={[sos.callNum, { color: darkMode ? '#ffffff' : c.color }]}>{c.number}</Text>
+                <Text style={[sos.callLabel, { color: darkMode ? theme.subText : c.color }]}>📞 Call</Text>
               </View>
             </TouchableOpacity>
           ))}
 
-          <View style={sos.tip}>
+          <View style={[sos.tip, { backgroundColor: darkMode ? '#2c2c2c' : '#f7fdfb', borderColor: theme.border }]}>
             <Text style={sos.tipText}>
               💡 Stay calm. Share your location with the operator.
             </Text>
           </View>
 
-          <TouchableOpacity style={sos.closeFullBtn} onPress={onClose}>
-            <Text style={sos.closeFullText}>Close</Text>
+          <TouchableOpacity 
+            style={[sos.closeFullBtn, { backgroundColor: theme.closeBtn }]} 
+            onPress={onClose}
+          >
+            <Text style={[sos.closeFullText, { color: theme.closeText }]}>Close</Text>
           </TouchableOpacity>
 
         </View>
       </View>
     </Modal>
-  )
+  );
 }
 
 // ── CUSTOM TAB BAR ──
 function CustomTabBar({ state, descriptors, navigation }: any) {
-  const [sosVisible, setSosVisible] = useState(false)
+  const [sosVisible, setSosVisible] = useState(false);
+  // 3. Consume theme inside custom tab controller
+  const { theme, darkMode } = useTheme();
 
   const handleSOS = () => {
-    Vibration.vibrate([0, 200, 100, 200])
-    setSosVisible(true)
-  }
+    Vibration.vibrate([0, 200, 100, 200]);
+    setSosVisible(true);
+  };
 
   const tabs = [
     { name: 'index',      label: 'Home',     emoji: '🏠' },
     { name: 'routes',     label: 'Routes',   emoji: '🗺️'  },
     { name: 'settings',   label: 'Settings', emoji: '⚙️'  },
-  ]
+  ];
 
   return (
     <>
       <SOSModal visible={sosVisible} onClose={() => setSosVisible(false)} />
 
-      <View style={bar.container}>
+      {/* Dynamic tab container styling */}
+      <View style={[bar.container, { backgroundColor: theme.cardBg, borderTopColor: theme.border }]}>
 
-        {/* Home tab */}
         {tabs.map((tab, index) => {
-          const isFocused = state.index === index
+          const isFocused = state.index === index;
           return (
             <TouchableOpacity
               key={tab.name}
@@ -95,42 +110,57 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               onPress={() => navigation.navigate(tab.name)}
             >
               <Text style={bar.tabEmoji}>{tab.emoji}</Text>
-              <Text style={[bar.tabLabel, isFocused && bar.tabLabelActive]}>
+              <Text style={[
+                bar.tabLabel, 
+                { color: theme.subText }, 
+                isFocused && bar.tabLabelActive
+              ]}>
                 {tab.label}
               </Text>
               {isFocused && <View style={bar.activeDot} />}
             </TouchableOpacity>
-          )
+          );
         })}
 
-        {/* SOS Button — center raised */}
-        <TouchableOpacity style={bar.sosBtn} onPress={handleSOS}>
+        {/* SOS Button — center raised with white border adjusting slightly to clear dark layouts */}
+        <TouchableOpacity 
+          style={[bar.sosBtn, { borderColor: theme.cardBg }]} 
+          onPress={handleSOS}
+        >
           <Text style={bar.sosEmoji}>🆘</Text>
         </TouchableOpacity>
 
       </View>
     </>
-  )
+  );
 }
 
-// ── ROOT LAYOUT ──
-export default function RootLayout() {
+// ── INNER LAYOUT WRAPPER ──
+// 4. Extracted core routing setup to consume ThemeProvider safely inside the export
+function TabNavigator() {
   return (
     <Tabs tabBar={(props) => <CustomTabBar {...props} />}>
       <Tabs.Screen name="index"    options={{ headerShown: false }} />
       <Tabs.Screen name="routes"   options={{ headerShown: false }} />
       <Tabs.Screen name="settings" options={{ headerShown: false }} />
     </Tabs>
-  )
+  );
+}
+
+// ── EXPORTED ROOT ENTRY ──
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <TabNavigator />
+    </ThemeProvider>
+  );
 }
 
 // ── STYLES ──
 const bar = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderTopWidth: 0.5,
-    borderTopColor: '#e8e8e8',
     paddingBottom: 16,
     paddingTop: 8,
     paddingHorizontal: 10,
@@ -154,7 +184,6 @@ const bar = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 11,
-    color: '#aaa',
     fontWeight: '500',
   },
   tabLabelActive: {
@@ -169,8 +198,6 @@ const bar = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: '#1B8C5E',
   },
-
-  // SOS raised button
   sosBtn: {
     width: 60,
     height: 60,
@@ -185,18 +212,11 @@ const bar = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     borderWidth: 3,
-    borderColor: '#fff',
   },
   sosEmoji: {
     fontSize: 20,
   },
-  sosLabel: {
-    fontSize: 9,
-    color: '#fff',
-    fontWeight: '700',
-    marginTop: 1,
-  },
-})
+});
 
 const sos = StyleSheet.create({
   overlay: {
@@ -205,7 +225,6 @@ const sos = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   box: {
-    backgroundColor: '#fff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 20,
@@ -220,24 +239,20 @@ const sos = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1a1a1a',
   },
   sub: {
     fontSize: 12,
-    color: '#888',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
-    backgroundColor: '#f0f0f0',
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   closeBtnText: {
     fontSize: 13,
-    color: '#555',
     fontWeight: '600',
   },
   row: {
@@ -245,7 +260,6 @@ const sos = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#f0f0f0',
     gap: 12,
   },
   icon: {
@@ -258,11 +272,9 @@ const sos = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1a1a1a',
   },
   desc: {
     fontSize: 11,
-    color: '#888',
     marginTop: 1,
   },
   callBtn: {
@@ -282,12 +294,10 @@ const sos = StyleSheet.create({
     marginTop: 1,
   },
   tip: {
-    backgroundColor: '#f7fdfb',
     borderRadius: 10,
     padding: 12,
     marginTop: 14,
     borderWidth: 1,
-    borderColor: '#d4ede3',
   },
   tipText: {
     fontSize: 12,
@@ -296,7 +306,6 @@ const sos = StyleSheet.create({
   },
   closeFullBtn: {
     marginTop: 14,
-    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     paddingVertical: 13,
     alignItems: 'center',
@@ -304,6 +313,5 @@ const sos = StyleSheet.create({
   closeFullText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#555',
   },
-})
+});
