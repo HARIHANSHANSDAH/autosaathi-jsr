@@ -9,11 +9,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useTheme } from '../components/ThemeContext'; // 1. Keeping the context hook
+import { useTheme } from '../components/ThemeContext';
 import { findIndirectRoute, getFare, IndirectRoute, STOPS } from '../data/routes';
 
 export default function HomeScreen() {
-  // 2. Pulled global theme (Removed setDarkMode since toggle is removed)
   const { theme, darkMode } = useTheme()
 
   const [from, setFrom] = useState('')
@@ -79,14 +78,12 @@ export default function HomeScreen() {
       return
     }
 
-    // ── Direct route ──
     const fare = getFare(from.trim(), to.trim())
     if (fare !== null) {
       setFareResult(fare)
       return
     }
 
-    // ── Indirect route ──
     const indirect = findIndirectRoute(from.trim(), to.trim())
     if (indirect.length > 0) {
       setIndirectRoutes(indirect)
@@ -104,7 +101,6 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
 
-        {/* ── HEADER (Toggle Button Removed) ── */}
         <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
           <View style={styles.logoRow}>
             <View style={styles.logoBox}>
@@ -120,7 +116,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* ── HERO TEXT ── */}
         <View style={[styles.hero, { backgroundColor: theme.headerBg }]}>
           <Text style={styles.heroTitle}>Know your{' '}
             <Text style={styles.heroYellow}>auto fare</Text>
@@ -131,10 +126,9 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* ── SEARCH BOX ── */}
+      
         <View style={[styles.searchBox, { backgroundColor: theme.cardBg }]}>
 
-          {/* FROM / TO row */}
           <View style={styles.searchRow}>
 
             {/* FROM */}
@@ -201,14 +195,14 @@ export default function HomeScreen() {
             <Text style={styles.searchBtnText}>Search Fare ↗</Text>
           </TouchableOpacity>
 
-          {/* Error Message display */}
+          {/* Error*/}
           {errorMsg && (
             <View style={styles.fareNotFound}>
               <Text style={styles.fareNotFoundText}>{errorMsg}</Text>
             </View>
           )}
 
-          {/* Fare result */}
+          {/*result */}
           {fareResult !== null && (
             <View style={styles.fareResult}>
               <Text style={styles.fareAmount}>₹ {fareResult}</Text>
@@ -216,7 +210,7 @@ export default function HomeScreen() {
             </View>
           )}
 
-          {/* ── INDIRECT ROUTES ── */}
+          {/* INDIRECT ROUTES */}
           {indirectRoutes.length > 0 && (
             <View style={styles.indirectContainer}>
 
@@ -230,7 +224,7 @@ export default function HomeScreen() {
                 </View>
               </View>
 
-              {indirectRoutes.slice(0, 3).map((route, index) => (
+              {indirectRoutes.slice(0, 2).map((route, index) => (
                 <View key={index} style={[styles.indirectCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
 
                   <View style={styles.indirectNum}>
@@ -239,7 +233,7 @@ export default function HomeScreen() {
 
                   <View style={styles.indirectBody}>
 
-                    {/* Leg 1 */}
+
                     <View style={styles.legRow}>
                       <View style={[styles.legDot, { backgroundColor: '#1B8C5E' }]} />
                       <View style={styles.legInfo}>
@@ -250,7 +244,6 @@ export default function HomeScreen() {
                       </View>
                     </View>
 
-                    {/* Change 1 */}
                     <View style={styles.changeRow}>
                       <View style={[styles.changeLine, { backgroundColor: theme.border }]} />
                       <View style={styles.changeBadge}>
@@ -261,7 +254,6 @@ export default function HomeScreen() {
                       <View style={[styles.changeLine, { backgroundColor: theme.border }]} />
                     </View>
 
-                    {/* Leg 2 */}
                     <View style={styles.legRow}>
                       <View style={[styles.legDot, { backgroundColor: '#6B21A8' }]} />
                       <View style={styles.legInfo}>
@@ -272,10 +264,8 @@ export default function HomeScreen() {
                       </View>
                     </View>
 
-                    {/* Leg 3 — only if 2 changes */}
                     {route.leg3 && route.via2 && (
                       <>
-                        {/* Change 2 */}
                         <View style={styles.changeRow}>
                           <View style={[styles.changeLine, { backgroundColor: theme.border }]} />
                           <View style={styles.changeBadge}>
@@ -286,7 +276,6 @@ export default function HomeScreen() {
                           <View style={[styles.changeLine, { backgroundColor: theme.border }]} />
                         </View>
 
-                        {/* Leg 3 */}
                         <View style={styles.legRow}>
                           <View style={[styles.legDot, { backgroundColor: '#B91C1C' }]} />
                           <View style={styles.legInfo}>
@@ -299,7 +288,6 @@ export default function HomeScreen() {
                       </>
                     )}
 
-                    {/* Total */}
                     <View style={styles.totalRow}>
                       <Text style={styles.totalLabel}>
                         Total fare • {route.changes} change{route.changes > 1 ? 's' : ''}
@@ -322,7 +310,6 @@ export default function HomeScreen() {
           )}    
         </View>
 
-        {/* ── FOOTER ── */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.subText }]}>Made with ❤️ by Hari</Text>
           <Text style={styles.footerSub}>Jamshedpur, Jharkhand</Text>

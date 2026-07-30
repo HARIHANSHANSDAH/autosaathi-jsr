@@ -1,12 +1,9 @@
 import { Tabs } from 'expo-router';
+import Head from 'expo-router/head';
 import { useState } from 'react';
 import { Linking, Modal, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
-// 1. Import the global theme hook and provider
 import { ThemeProvider, useTheme } from '../components/ThemeContext';
-
-// ── SOS MODAL COMPONENT ──
 function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
-  // 2. Consume the current theme styles inside the modal
   const { theme, darkMode } = useTheme();
 
   const contacts = [
@@ -21,7 +18,6 @@ function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={sos.overlay}>
-        {/* Dynamic modal container background color */}
         <View style={[sos.box, { backgroundColor: theme.modalBox }]}>
 
           <View style={sos.header}>
@@ -43,7 +39,6 @@ function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void 
               style={[sos.row, { borderBottomColor: theme.divider }]}
               onPress={() => Linking.openURL(`tel:${c.number}`)}
             >
-              {/* If dark mode is on, we give the contact row icons a neutral background */}
               <View style={[sos.icon, { backgroundColor: darkMode ? '#2c2c2c' : c.bg }]}>
                 <Text style={{ fontSize: 20 }}>{c.emoji}</Text>
               </View>
@@ -77,10 +72,8 @@ function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void 
   );
 }
 
-// ── CUSTOM TAB BAR ──
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const [sosVisible, setSosVisible] = useState(false);
-  // 3. Consume theme inside custom tab controller
   const { theme, darkMode } = useTheme();
 
   const handleSOS = () => {
@@ -89,18 +82,16 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
   };
 
   const tabs = [
-    { name: 'index',      label: 'Home',     emoji: '🏠' },
-    { name: 'routes',     label: 'Routes',   emoji: '🗺️'  },
-    { name: 'settings',   label: 'Settings', emoji: '⚙️'  },
+    { name: 'index',    label: 'Home',    emoji: '🏠' },
+    { name: 'routes',   label: 'Routes',  emoji: '🗺️'  },
+    { name: 'settings', label: 'Settings', emoji: '⚙️'  },
   ];
 
   return (
     <>
       <SOSModal visible={sosVisible} onClose={() => setSosVisible(false)} />
 
-      {/* Dynamic tab container styling */}
       <View style={[bar.container, { backgroundColor: theme.cardBg, borderTopColor: theme.border }]}>
-
         {tabs.map((tab, index) => {
           const isFocused = state.index === index;
           return (
@@ -122,21 +113,17 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           );
         })}
 
-        {/* SOS Button — center raised with white border adjusting slightly to clear dark layouts */}
         <TouchableOpacity 
           style={[bar.sosBtn, { borderColor: theme.cardBg }]} 
           onPress={handleSOS}
         >
           <Text style={bar.sosEmoji}>🆘</Text>
         </TouchableOpacity>
-
       </View>
     </>
   );
 }
 
-// ── INNER LAYOUT WRAPPER ──
-// 4. Extracted core routing setup to consume ThemeProvider safely inside the export
 function TabNavigator() {
   return (
     <Tabs tabBar={(props) => <CustomTabBar {...props} />}>
@@ -147,16 +134,21 @@ function TabNavigator() {
   );
 }
 
-// ── EXPORTED ROOT ENTRY ──
 export default function RootLayout() {
   return (
     <ThemeProvider>
+      <Head>
+        <title>AutoSaathi JSR</title>
+        <link 
+          rel="icon" 
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛺</text></svg>" 
+        />
+      </Head>
       <TabNavigator />
     </ThemeProvider>
   );
 }
 
-// ── STYLES ──
 const bar = StyleSheet.create({
   container: {
     flexDirection: 'row',

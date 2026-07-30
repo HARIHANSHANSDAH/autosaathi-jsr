@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 
-// Centralized themes dictionary
 export const themes = {
   light: {
     statusBar: '#1B8C5E',

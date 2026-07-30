@@ -1,6 +1,4 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-
-// 1. Comprehensive color mapping utilized across HomeScreen and SettingsScreen
 export const themes = {
   light: {
     statusBar: '#1B8C5E',
@@ -36,7 +34,6 @@ export const themes = {
   },
 };
 
-// 2. Define strict TypeScript types mapping to our themes structure
 type ThemeType = typeof themes.light;
 
 interface ThemeContextType {
@@ -45,14 +42,12 @@ interface ThemeContextType {
   theme: ThemeType;
 }
 
-// 3. Initialize the Global Context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-// 4. Main Provider Component
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const theme = darkMode ? themes.dark : themes.light;
@@ -64,7 +59,6 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   );
 };
 
-// 5. Custom Hook for clean consumption inside screens
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

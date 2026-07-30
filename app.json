@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "autosaathi-jsr",
+    "name": "AutoSaathi JSR",
     "slug": "autosaathi-jsr",
-    "version": "1.0.0",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "autosaathijsr",
@@ -22,6 +22,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "title": "AutoSaathi JSR",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },

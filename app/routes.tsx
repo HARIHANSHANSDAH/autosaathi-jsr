@@ -4435,7 +4435,7 @@ const ROUTES = [
     color: '#1B8C5E',
     bg: '#E1F5EE',
     emoji: '🟢',
-    fare: '₹15',
+    fare: '₹20',
     data: newBaridihToSakchi,
   },
   {
@@ -4568,6 +4568,7 @@ const mapHtml = `
 <html>
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>AutoSaathi JSR</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
@@ -4652,7 +4653,6 @@ export default function RoutesScreen() {
     if (!route) return
     setActiveRoute(route)
 
-    // Parse GeoJSON coords
     const coords: [number, number][] = []
     route.data?.features?.forEach((feature: any) => {
       if (feature?.geometry?.coordinates) {
@@ -4684,13 +4684,11 @@ export default function RoutesScreen() {
     <SafeAreaView style={styles.safe}>
       <StatusBar backgroundColor="#1B8C5E" barStyle="light-content" />
 
-      {/* ── HEADER ── */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🗺️ Route Map</Text>
         <Text style={styles.headerSub}>Tap a route to see it on the map</Text>
       </View>
 
-      {/* ── MAP ── */}
       <View style={styles.mapContainer}>
         {Platform.OS === 'web' ? (
           <iframe
@@ -4712,7 +4710,6 @@ export default function RoutesScreen() {
           />
         )}
 
-        {/* Active route badge */}
         {activeRoute && (
           <View style={[styles.activeBadge, { backgroundColor: activeRoute.color }]}>
             <Text style={styles.activeBadgeText}>
@@ -4722,7 +4719,6 @@ export default function RoutesScreen() {
         )}
       </View>
 
-      {/* ── ROUTE BUTTONS ── */}
       <View style={styles.routesPanel}>
         <Text style={styles.panelTitle}>Select Route</Text>
         <ScrollView
@@ -4783,11 +4779,9 @@ const styles = StyleSheet.create({
   headerTitle:   { fontSize: 22, fontWeight: '700', color: '#fff' },
   headerSub:     { fontSize: 12, color: 'rgba(255,255,255,0.70)', marginTop: 4 },
 
-  // Map
   mapContainer:  { flex: 1, position: 'relative' },
   map:           { flex: 1 },
 
-  // Active badge
   activeBadge: {
     position: 'absolute',
     top: 12,
@@ -4804,7 +4798,6 @@ const styles = StyleSheet.create({
   },
   activeBadgeText: { color: '#fff', fontSize: 13, fontWeight: '600', textAlign: 'center' },
 
-  // Routes panel
   routesPanel:   { backgroundColor: '#fff', paddingTop: 12, paddingBottom: 16, borderTopWidth: 0.5, borderTopColor: '#e8e8e8' },
   panelTitle:    { fontSize: 12, fontWeight: '700', color: '#888', letterSpacing: 0.8, textTransform: 'uppercase', paddingHorizontal: 16, marginBottom: 10 },
   routesList:    { paddingHorizontal: 16, gap: 10 },

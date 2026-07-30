@@ -33,7 +33,6 @@ export default function SettingsScreen() {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.headerBg }]}>
       <StatusBar backgroundColor={theme.statusBar} barStyle="light-content" />
 
-      {/* ── HEADER ── */}
       <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
         <Text style={styles.headerTitle}>⚙️ Settings</Text>
         <Text style={styles.headerSub}>AutoSaathi JSR v1.2.0</Text>
@@ -41,7 +40,7 @@ export default function SettingsScreen() {
 
       <ScrollView style={[styles.scroll, { backgroundColor: theme.bg }]} showsVerticalScrollIndicator={false}>
 
-        {/* ── ABOUT SECTION ── */}
+        {/*  ABOUT SECTION  */}
         <Text style={[styles.sectionLabel, { color: theme.subText }]}>ABOUT</Text>
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
 
@@ -100,7 +99,7 @@ export default function SettingsScreen() {
 
         </View>
 
-        {/* ── THEME SECTION ── */}
+        {/*  THEME SECTION  */}
         <Text style={[styles.sectionLabel, { color: theme.subText }]}>THEME</Text>
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <View style={styles.row}>
@@ -122,7 +121,7 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* ── REPORT SECTION ── */}
+        {/*  REPORT SECTION  */}
         <Text style={[styles.sectionLabel, { color: theme.subText }]}>REPORT</Text>
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
 
@@ -165,7 +164,7 @@ export default function SettingsScreen() {
 
         </View>
 
-        {/* ── MADE BY ── */}
+        {/*  MADE BY  */}
         <View style={styles.madeBy}>
           <Text style={[styles.madeByText, { color: theme.subText }]}>Made with ❤️ by Hari</Text>
           <Text style={styles.madeByVersion}>AutoSaathi JSR v1.2.0 • Jamshedpur</Text>
@@ -173,7 +172,7 @@ export default function SettingsScreen() {
 
       </ScrollView>
 
-      {/* ── ABOUT MODAL ── */}
+      {/*  ABOUT MODAL  */}
       <Modal visible={aboutModal} animationType="slide" transparent onRequestClose={() => setAboutModal(false)}>
         <View style={modal.overlay}>
           <View style={[modal.box, { backgroundColor: theme.modalBox }]}>
@@ -216,7 +215,7 @@ export default function SettingsScreen() {
         </View>
       </Modal>
 
-      {/* ── REPORT MODAL ── */}
+      {/*  REPORT MODAL  */}
       <Modal visible={reportModal} animationType="slide" transparent onRequestClose={() => setReportModal(false)}>
         <View style={modal.overlay}>
           <View style={[modal.box, { backgroundColor: theme.modalBox }]}>
