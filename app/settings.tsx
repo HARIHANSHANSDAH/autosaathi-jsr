@@ -15,19 +15,34 @@ import {
 import { useTheme } from '../components/ThemeContext';
 
 export default function SettingsScreen() {
-  const { darkMode, setDarkMode, theme } = useTheme()
+  const { darkMode, setDarkMode, theme } = useTheme();
   
-  const [notifications, setNotifications] = useState(true)
-  const [reportModal, setReportModal] = useState(false)
-  const [aboutModal, setAboutModal] = useState(false)
+  // Google Form Links
+  const rBug = "https://docs.google.com/forms/d/e/1FAIpQLSdjVHw7qUnGvPsojDJpEGLGRTpaLmG6PqvHjnFfgjhPDfmVNQ/viewform";
+  const wrongfare = "https://docs.google.com/forms/d/e/1FAIpQLSeEwBtU832iSKFpk-0y3LgqXXPHOG6wLgPmwaHOFC7Qw1dkPw/viewform";
+  const suggestR = "https://docs.google.com/forms/d/e/1FAIpQLSdQTf7Ss-iu342wDWj4HLrmXk2qkQNEmG0fjulPiKzTbbTBSQ/viewform";
+  const feedbackF = "https://docs.google.com/forms/d/e/1FAIpQLSdjShTYqe5_Ij4tAsMYTtZ6dk7uiUg-D0tN6l6O9QLd1-zY3g/viewform";
+  
+  // State
+  const [privacyModal, setPrivacyModal] = useState(false);
+  const [aboutModal, setAboutModal] = useState(false);
 
-  const handleReport = () => {
-    Linking.openURL('mailto:autosaathijsr@gmail.com?subject=Report%20Issue&body=Describe%20your%20issue%20here...')
-  }
+  // Handlers
+  const handleReportBug = () => {
+    Linking.openURL(rBug).catch((err) => console.error("Couldn't load page", err));
+  };
 
-  const handleWhatsApp = () => {
-    Linking.openURL('https://wa.me/91XXXXXXXXXX?text=Hi%20AutoSaathi%20JSR,%20I%20want%20to%20report%20an%20issue.')
-  }
+  const handleWrongFare = () => {
+    Linking.openURL(wrongfare).catch((err) => console.error("Couldn't load page", err));
+  };
+
+  const handleSuggestRoute = () => {
+    Linking.openURL(suggestR).catch((err) => console.error("Couldn't load page", err));
+  };
+
+  const handleFeedback = () => {
+    Linking.openURL(feedbackF).catch((err) => console.error("Couldn't load page", err));
+  };
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.headerBg }]}>
@@ -57,23 +72,7 @@ export default function SettingsScreen() {
 
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
-          <TouchableOpacity
-            style={styles.row}
-            onPress={() => Linking.openURL('https://harihanshansdah.online')}
-          >
-            <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#e8f0fd' }]}>
-              <Text style={styles.rowEmoji}>🌐</Text>
-            </View>
-            <View style={styles.rowContent}>
-              <Text style={[styles.rowTitle, { color: theme.text }]}>Visit Website</Text>
-              <Text style={[styles.rowSub, { color: theme.subText }]}>harihanshansdah.online</Text>
-            </View>
-            <Text style={styles.rowArrow}>›</Text>
-          </TouchableOpacity>
-
-          <View style={[styles.divider, { backgroundColor: theme.divider }]} />
-
-          <TouchableOpacity style={styles.row}>
+          <TouchableOpacity style={styles.row} onPress={handleFeedback}>
             <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#fef3e2' }]}>
               <Text style={styles.rowEmoji}>⭐</Text>
             </View>
@@ -86,9 +85,10 @@ export default function SettingsScreen() {
 
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
-          <TouchableOpacity style={styles.row}>
+          {/* FIXED: Added onPress handler here */}
+          <TouchableOpacity style={styles.row} onPress={() => setPrivacyModal(true)}>
             <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#f5eef8' }]}>
-              <Text style={styles.rowEmoji}>📋</Text>
+              <Text style={styles.rowEmoji}>🔒</Text>
             </View>
             <View style={styles.rowContent}>
               <Text style={[styles.rowTitle, { color: theme.text }]}>Privacy Policy</Text>
@@ -125,7 +125,7 @@ export default function SettingsScreen() {
         <Text style={[styles.sectionLabel, { color: theme.subText }]}>REPORT</Text>
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
 
-          <TouchableOpacity style={styles.row} onPress={() => setReportModal(true)}>
+          <TouchableOpacity style={styles.row} onPress={handleWrongFare}>
             <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#fdecea' }]}>
               <Text style={styles.rowEmoji}>🚨</Text>
             </View>
@@ -138,7 +138,7 @@ export default function SettingsScreen() {
 
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
-          <TouchableOpacity style={styles.row} onPress={handleReport}>
+          <TouchableOpacity style={styles.row} onPress={handleReportBug}>
             <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#e8f0fd' }]}>
               <Text style={styles.rowEmoji}>🐛</Text>
             </View>
@@ -151,7 +151,7 @@ export default function SettingsScreen() {
 
           <View style={[styles.divider, { backgroundColor: theme.divider }]} />
 
-          <TouchableOpacity style={styles.row}>
+          <TouchableOpacity style={styles.row} onPress={handleSuggestRoute}>
             <View style={[styles.rowIcon, { backgroundColor: darkMode ? '#2c2c2c' : '#fef3e2' }]}>
               <Text style={styles.rowEmoji}>➕</Text>
             </View>
@@ -215,47 +215,60 @@ export default function SettingsScreen() {
         </View>
       </Modal>
 
-      {/*  REPORT MODAL  */}
-      <Modal visible={reportModal} animationType="slide" transparent onRequestClose={() => setReportModal(false)}>
+      {/* FIXED: Removed the duplicated privacy modal code block */}
+      {/* PRIVACY POLICY MODAL */}
+      <Modal visible={privacyModal} animationType="slide" transparent onRequestClose={() => setPrivacyModal(false)}>
         <View style={modal.overlay}>
           <View style={[modal.box, { backgroundColor: theme.modalBox }]}>
+            
             <View style={modal.header}>
-              <Text style={[modal.title, { color: theme.text }]}>🚨 Report Issue</Text>
-              <TouchableOpacity style={[modal.closeBtn, { backgroundColor: theme.closeBtn }]} onPress={() => setReportModal(false)}>
+              <Text style={[modal.title, { color: theme.text }]}>🔒 Privacy Policy</Text>
+              <TouchableOpacity style={[modal.closeBtn, { backgroundColor: theme.closeBtn }]} onPress={() => setPrivacyModal(false)}>
                 <Text style={[modal.closeBtnText, { color: theme.closeText }]}>✕</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={[modal.reportDesc, { color: theme.subText }]}>
-              How would you like to report the issue?
-            </Text>
+            <View style={modal.logoBox}>
+              <Text style={{ fontSize: 48 }}>🔒</Text>
+              <Text style={[modal.appName, { color: theme.text }]}>Your Privacy Matters</Text>
+              <Text style={[modal.version, { color: theme.subText }]}>AutoSaathi JSR</Text>
+            </View>
 
             {[
-              { emoji: '📧', label: 'Send Email',    desc: 'autosaathijsr@gmail.com', fn: handleReport     },
-              { emoji: '💬', label: 'WhatsApp',      desc: 'Chat with us directly',   fn: handleWhatsApp   },
-            ].map((opt) => (
-              <TouchableOpacity
-                key={opt.label}
-                style={[modal.reportOption, { backgroundColor: darkMode ? '#2c2c2c' : '#f7fdfb', borderColor: theme.border }]}
-                onPress={() => { opt.fn(); setReportModal(false) }}
-              >
-                <Text style={{ fontSize: 24 }}>{opt.emoji}</Text>
-                <View>
-                  <Text style={[modal.reportOptionTitle, { color: theme.text }]}>{opt.label}</Text>
-                  <Text style={[modal.reportOptionDesc, { color: theme.subText }]}>{opt.desc}</Text>
-                </View>
-              </TouchableOpacity>
+              { label: 'Personal Data', value: 'We do not collect personal data' },
+              { label: 'Data Storage',  value: 'We do not store your personal information' },
+              { label: 'Data Sharing',  value: 'We do not sell or share your personal data' },
+              { label: 'Account',       value: 'No account or registration is required' },
+              { label: 'Location',      value: 'Used only when required for route services' },
+            ].map((item) => (
+              <View key={item.label} style={[modal.infoRow, { borderBottomColor: theme.border }]}>
+                <Text style={[modal.infoLabel, { color: theme.subText }]}>{item.label}</Text>
+                <Text style={[modal.infoValue, { color: theme.text, flex: 1, textAlign: 'right', marginLeft: 15 }]}>
+                  {item.value}
+                </Text>
+              </View>
             ))}
 
-            <TouchableOpacity style={[modal.closeFullBtn, { backgroundColor: theme.closeBtn }]} onPress={() => setReportModal(false)}>
-              <Text style={[modal.closeFullText, { color: theme.closeText }]}>Cancel</Text>
+            <View style={modal.mission}>
+              <Text style={modal.missionText}>
+                🛡️ We respect your privacy. AutoSaathi JSR is designed to collect as little information as possible. We do not sell, rent, or share your personal information with third parties.
+              </Text>
+            </View>
+
+            <Text style={{ color: theme.subText, textAlign: 'center', marginTop: 12, marginBottom: 15, lineHeight: 20 }}>
+              We are continuously working to keep AutoSaathi JSR simple, useful, and privacy-friendly.
+            </Text>
+
+            <TouchableOpacity style={[modal.closeFullBtn, { backgroundColor: theme.closeBtn }]} onPress={() => setPrivacyModal(false)}>
+              <Text style={[modal.closeFullText, { color: theme.closeText }]}>Close</Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </Modal>
 
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -277,7 +290,7 @@ const styles = StyleSheet.create({
   madeBy:       { alignItems: 'center', paddingVertical: 28 },
   madeByText:   { fontSize: 13, fontWeight: '500' },
   madeByVersion:{ fontSize: 11, color: '#aaa', marginTop: 3 },
-})
+});
 
 const modal = StyleSheet.create({
   overlay:          { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
@@ -300,4 +313,4 @@ const modal = StyleSheet.create({
   reportOption:     { flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 12, padding: 14, marginBottom: 10, borderWidth: 1 },
   reportOptionTitle:{ fontSize: 14, fontWeight: '600' },
   reportOptionDesc: { fontSize: 12, marginTop: 2 },
-})
+});
