@@ -4446,7 +4446,7 @@ const ROUTES = [
     color: '#6B21A8',
     bg: '#F3E8FF',
     emoji: '🟣',
-    fare: '₹30',
+    fare: '₹40',
     data: stationToNewBaridih,
   },
   {
