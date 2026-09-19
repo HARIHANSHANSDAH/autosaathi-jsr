@@ -1,8 +1,11 @@
 import { Tabs } from 'expo-router';
 import Head from 'expo-router/head';
 import { useState } from 'react';
+
 import { Linking, Modal, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { ThemeProvider, useTheme } from '../components/ThemeContext';
+
+
 function SOSModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const { theme, darkMode } = useTheme();
 
@@ -150,9 +153,20 @@ export default function RootLayout() {
           }}
         />
         <title>AutoSaathi JSR</title>
+        <meta 
+    name="description" 
+    content="Find standard shared auto-rickshaw fares and verified routes across Jamshedpur. Check rates for Sakchi, Bistupur, Tatanagar Station, Kadma, and Mango." 
+  />
+  <meta name="keywords" content="Jamshedpur auto fare, Tatanagar station auto rate, Sakchi to Bistupur auto fare, shared auto Jamshedpur, AutoSaathi JSR" />
+
+  <meta property="og:title" content="AutoSaathi JSR - Jamshedpur Auto Fares" />
+  <meta property="og:description" content="Calculate standard shared auto rates across Jamshedpur before you travel." />
+  <meta property="og:url" content="https://autosaathijsr.online" />
+  <meta property="og:type" content="website" />
         <link 
           rel="icon" 
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛺</text></svg>" 
+          type="image/svg+xml" 
+          href="/auto.svg" 
         />
       </Head>
       <TabNavigator />
