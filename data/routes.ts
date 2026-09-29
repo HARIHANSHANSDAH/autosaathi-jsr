@@ -444,8 +444,9 @@ export const ROUTES: Route[] = [
   { from: 'Sakchi', to: 'P&M Mall',   fare: 25, km: 6.5 },
   { from: 'Bistupur', to: 'P&M Mall', fare: 20, km: 4.8 },
 
-{ from: 'Tatanagar Station', to: 'Bistupur', fare: 20 },
-{ from: 'Bistupur', to: 'Kandra', fare: 30 }
+  { from: 'Tatanagar Station', to: 'Bistupur', fare: 20 },
+  { from: 'Bistupur', to: 'Kandra', fare: 30 },
+  { from: 'Tatanagar Station', to: 'P&M Mall', fare: 20 },
 ];
 
 export function getFare(from: string, to: string): number | null {
