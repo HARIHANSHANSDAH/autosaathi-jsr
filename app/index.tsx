@@ -10,9 +10,11 @@ import {
   View
 } from 'react-native';
 import { useTheme } from '../components/ThemeContext';
+import DurgaPujaModal from '../components/ui/DurgaPujaModal';
 import { findIndirectRoute, getFare, IndirectRoute, STOPS } from '../data/routes';
 
 export default function HomeScreen() {
+
   const { theme, darkMode } = useTheme()
 
   const [from, setFrom] = useState('')
@@ -100,7 +102,7 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-
+        <DurgaPujaModal />
         <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
           <View style={styles.logoRow}>
             <View style={styles.logoBox}>
@@ -321,6 +323,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+  },
   safe: {
     flex: 1,
   },
