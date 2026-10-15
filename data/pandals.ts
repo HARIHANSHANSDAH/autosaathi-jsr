@@ -15,7 +15,7 @@ export const TOP_PANDALS = [
     name: 'S-Type Durga Puja Pandal',
     budget: '₹30 Lakhs (Approx)',
     theme: 'Swaminarayan Temple',
-    image: require('../assets/images/pandal/stype.png'),
+    image: require('../assets/images/pandal/stype.webp'),
     latitude: 22.78789,
     longitude: 86.15840,
   },
@@ -39,22 +39,22 @@ export const TOP_PANDALS = [
     longitude: 86.235501,
   }
   ,
-  // {
-  //   id: '5',
-  //   name: 'Old Baridih',
-  //   budget: '₹30 - 40 Lakhs (Approx)',
-  //   theme: 'Grand Palace Replica',
-  //   image: require('../assets/images/dp.png'),
-  //   latitude: 22.8035,
-  //   longitude: 86.1950,
-  // }
-  // ,
+  {
+    id: '5',
+    name: 'Football Maidan Durga Puja',
+    budget: '₹10 - 15 Lakhs (Approx)',
+    theme: 'Cave',
+    image: require('../assets/images/pandal/football.webp'),
+    latitude: 22.787494,
+    longitude: 86.160203,
+  }
+  ,
   {
     id: '6',
     name: 'Baridih Chowk',
     budget: '₹15 - 20 Lakhs (Approx)',
-    theme: 'Grand Palace Replica',
-    image: require('../assets/images/pandal/baridih-c.png'),
+    theme: 'Eco Friendly',
+    image: require('../assets/images/pandal/baridih-c.webp'),
     latitude: 22.795398,
     longitude: 86.243799,
   }
@@ -69,16 +69,16 @@ export const TOP_PANDALS = [
     longitude: 86.205512,
   }
   ,
-  // {
-  //   id: '8',
-  //   name: 'Telco Durga Puja Pandal',
-  //   budget: '₹30 - 40 Lakhs (Approx)',
-  //   theme: 'Grand Palace Replica',
-  //   image: require('../assets/images/pandal/telco.png'),
-  //   latitude: 22.8035,
-  //   longitude: 86.1950,
-  // }
-  // ,
+  {
+    id: '8',
+    name: 'New Baridih Durga Puja Pandal',
+    budget: '₹5 - 10 Lakhs (Approx)',
+    theme: 'Guitar',
+    image: require('../assets/images/pandal/newb.webp'),
+    latitude: 22.791359,
+    longitude: 86.239306,
+  }
+  ,
   {
     id: '9',
     name: 'Burma Mines Puja Pandal',
@@ -89,8 +89,18 @@ export const TOP_PANDALS = [
     longitude: 86.211090,
   }
   ,
+  {
+    id: '10',
+    name: 'Old Baridih Durga Puja Pandal',
+    budget: '₹10 Lakhs (Approx)',
+    theme: 'Thailand Buddha Temple',
+    image: require('../assets/images/pandal/old-b.webp'),
+    latitude: 22.799563,
+    longitude: 86.241825,
+  }
+  ,
   // {
-  //   id: '10',
+  //   id: '11',
   //   name: 'Adityapur Imli Chowk',
   //   budget: '₹30 - 40 Lakhs (Approx)',
   //   theme: 'Gufa',

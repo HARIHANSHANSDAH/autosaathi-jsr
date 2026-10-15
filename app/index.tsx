@@ -313,7 +313,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={[styles.footerText, { color: theme.subText }]}>Made with ❤️ by Hari</Text>
+          <Text style={[styles.footerText, { color: theme.subText }]}>Made with ❤️</Text>
           <Text style={styles.footerSub}>Jamshedpur, Jharkhand</Text>
         </View>
 
