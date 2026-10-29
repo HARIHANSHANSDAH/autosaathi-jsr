@@ -10,7 +10,7 @@ import {
   View
 } from 'react-native';
 import { useTheme } from '../components/ThemeContext';
-import DurgaPujaModal from '../components/ui/DurgaPujaModal';
+// import DurgaPujaModal from '../components/ui/DurgaPujaModal';
 import { findIndirectRoute, getFare, IndirectRoute, STOPS } from '../data/routes';
 
 export default function HomeScreen() {
@@ -102,7 +102,7 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <DurgaPujaModal />
+        {/* <DurgaPujaModal /> */}
         <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
           <View style={styles.logoRow}>
             <View style={styles.logoBox}>
