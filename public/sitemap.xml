@@ -15,12 +15,4 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- About / Fare Guide -->
-  <url>
-    <loc>https://autosaathijsr.online/about</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
 </urlset>
